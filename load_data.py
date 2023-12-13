@@ -25,11 +25,12 @@ def load_all_ipus(folder_path:str='transcr', load_words:bool=False):
         df['dyad'] = file.split('/')[-1].split('_')[0]
         data.append(df)
             
+    #a remettre si besoin
     data = pd.concat(data, axis=0).reset_index(drop=True).drop(columns=['?'])
-    print(data.shape)
+    #print(data.shape)
     plabels = [col for col in data.columns if not any([col.startswith(c) 
             for c in ['dyad', 'ipu_id','speaker','start','stop','text', 'duration']])]
-    print(data[plabels].sum(axis=0) / data.shape[0])
+    #print(data[plabels].sum(axis=0) / data.shape[0])
     return data
 
 def filter_after_jokes(df_ipu:pd.DataFrame):
