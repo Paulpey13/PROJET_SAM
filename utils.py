@@ -60,15 +60,17 @@ def calculate_f1_and_confusion_matrix_text(model, data_loader, device):
 
     return f1, conf_matrix
 
-def predition_model_audio(model,dataset,device):
+def predition_model_audio(model,dataset,device,proba=True):
     all_preds = []
     all_labels = []
     with torch.no_grad():
         for inputs, labels in dataset:
             inputs, labels = inputs.to(device), labels.to(device)
 
-            outputs = model(inputs)
-            _, preds = torch.max(outputs.data, dim=1)
+            preds = model(inputs)
+            preds=preds.logits
+            if not proba:
+                _, preds = torch.max(preds.data, dim=1)
             all_preds.append(preds.cpu().numpy())
             all_labels.append(labels.cpu().numpy())
 
@@ -78,7 +80,7 @@ def predition_model_audio(model,dataset,device):
 
 
 
-def prediction_model_text(model,test_loader,device):
+def prediction_model_text(model,test_loader,device,proba=True):
     all_preds_text = []
     all_labels = []
     with torch.no_grad():
@@ -88,8 +90,9 @@ def prediction_model_text(model,test_loader,device):
             labels = d["labels"].to(device)
 
             outputs = model(input_ids=input_ids, attention_mask=attention_mask)
-            logits = outputs.logits
-            _, preds = torch.max(logits, dim=1)
+            preds = outputs.logits
+            if not proba:
+                _, preds = torch.max(preds, dim=1)
 
             all_preds_text.append(preds.cpu().numpy())
             all_labels.append(labels.cpu().numpy())
