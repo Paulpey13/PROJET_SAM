@@ -3,18 +3,17 @@ from torch.utils.data import DataLoader, Dataset
 def create_sequences(text_series, window_size=5):
     sequences = []
     for i in range(1, window_size + 1):
-        # Ajouter le nombre approprié de mots "debut" au début
+        # Ajout du nombre approprié de mots "debut" au début quand on a pas de contexte précédent
         padded_sequence = ['debut'] * (window_size - i) + text_series[:i]
         sequences.append(' '.join(padded_sequence))
         
     for i in range(window_size, len(text_series)):
-        # Prendre 20 mots précédents et le mot courant pour former la séquence
+        # Prendre window_size mots précédents et le mot courant pour former la séquence
         sequence = text_series[i - window_size:i+1]
-        # Convert all items to strings
         sequence = [str(word) for word in sequence]
         sequences.append(' '.join(sequence))
     return sequences
-# Classe de Dataset
+# Classe de Dataset pour le texte
 class TextDataset(Dataset):
     def __init__(self, texts, labels, tokenizer, max_len):
         self.texts = texts
