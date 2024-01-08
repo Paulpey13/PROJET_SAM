@@ -4,11 +4,12 @@ from sklearn.metrics import f1_score, confusion_matrix
 def create_y(df):
     y = [0] 
     for i in range(0, len(df)-1):
-        # Check if the current speaker is different from the previous one
-        if df['speaker'][i] != df['speaker'][i+1] and int(df['stop_words'][i])==int(df['stop_ipu'][i]):
-            y.append(1)  # Speaker changed
-        else:
-            y.append(0)  # Speaker did not change
+        if int(df['stop_words'][i]) == int(df['stop_ipu'][i]):
+            # Check if the current speaker is different from the previous one
+            if df['speaker'][i] != df['speaker'][i+1]:
+                y.append(1)  # Speaker changed
+            else:
+                y.append(0)  # Speaker did not change
     return y
 
 def calculate_f1_and_confusion_matrix_audio(model, data_loader, device):
@@ -68,6 +69,7 @@ def predition_model_audio(model,dataset,device,proba=True):
             inputs, labels = inputs.to(device), labels.to(device)
 
             preds = model(inputs)
+            #preds=preds.logits
             if not proba:
                 _, preds = torch.max(preds.data, dim=1)
             all_preds.append(preds.cpu().numpy())
