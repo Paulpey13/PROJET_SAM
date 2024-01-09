@@ -5,7 +5,7 @@ def create_y(df):
     y = [0] 
     for i in range(0, len(df)-1):
         # Check if the current speaker is different from the previous one
-        if df['speaker'][i] != df['speaker'][i+1] and int(df['stop_words'][i])==int(df['stop_ipu'][i]):
+        if df['speaker'][i] != df['speaker'][i+1]:
             y.append(1)  # Speaker changed
         else:
             y.append(0)  # Speaker did not change
