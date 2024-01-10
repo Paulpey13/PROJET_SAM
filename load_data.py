@@ -26,7 +26,7 @@ def load_all_ipus(folder_path:str='transcr', load_words:bool=False):
         data.append(df)
             
     #a remettre si besoin
-    data = pd.concat(data, axis=0).reset_index(drop=True).drop(columns=['?'])
+    data = pd.concat(data, axis=0).reset_index(drop=True)
     #print(data.shape)
     plabels = [col for col in data.columns if not any([col.startswith(c) 
             for c in ['dyad', 'ipu_id','speaker','start','stop','text', 'duration']])]

@@ -11,6 +11,42 @@ def create_y(df):
             y.append(0)  # Speaker did not change
     return y
 
+def create_y_yield_at(df):
+    y = [] 
+    for i in range(len(df)):
+        # Check if the current speaker is different from the previous one
+        if df['yield_at_end'][i]==True:
+            y.append(1)  # Speaker changed
+        else:
+            y.append(0)  # Speaker did not change
+    return y
+
+
+def create_y_turn_after(df):
+    y = [] 
+    for i in range(len(df)):
+        # Check if the current speaker is different from the previous one
+        if df['turn_after'][i]==True:
+            y.append(1)  # Speaker changed
+        else:
+            y.append(0)  # Speaker did not change
+    return y
+    
+def create_y_time(df,window_time):
+    y = [0] 
+    for i in range(0, len(df)-1):
+        # Check if the current speaker is different from the previous one
+        j=i+1
+        stop=False
+        while j<len(df)and df['start_words'][j] < df['stop_words'][i]+window_time and not stop:
+            if df['speaker'][i] != df['speaker'][j]:
+                y.append(1)  # Speaker changed
+                stop = True
+            j+=1
+        if stop==False:
+            y.append(0) # Speaker did not change in time windows
+    return y
+
 def calculate_f1_and_confusion_matrix_audio(model, data_loader, device):
     model.eval()
     all_preds = []

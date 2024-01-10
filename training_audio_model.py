@@ -72,7 +72,7 @@ def find_audio_file(dyad,first_speaker,audio_files_path):
     return None
 
 # Cette fonction extrait les segments audio en utilisant les informations du dataframe fournis dans le projet
-def extract_audio_segments(df,audio_files_path):
+def extract_audio_segments_mots(df,audio_files_path):
     audio_segments = []
     audio_file_path = ""
     nombre_boucle=0
@@ -96,6 +96,34 @@ def extract_audio_segments(df,audio_files_path):
         if audio_file_path!="":
             start_ms = int(row['start_ipu'] * 1000)
             end_ms = int(row['stop_words'] * 1000)
+            segment = audio[start_ms:end_ms]
+            audio_segments.append(segment)
+    return audio_segments
+
+def extract_audio_segments(df,audio_files_path):
+    audio_segments = []
+    audio_file_path = ""
+    nombre_boucle=0
+    for index, row in df.iterrows():
+        nombre_boucle+=1
+        first_speaker=str(row['speaker'])
+        if isinstance(row['speaker'], float):
+            first_speaker="NA"
+            
+            
+        if first_speaker not in audio_file_path:
+            # Si le fichier audio n'est pas chargé, on le charge
+            audio = None
+            gc.collect()
+            audio_file_path = find_audio_file(row['dyad'],first_speaker,audio_files_path)
+            if audio_file_path is None:
+                print("Audio file not found for dyad {}".format(row['dyad']))
+                audio_file_path = ""
+                continue
+            audio = AudioSegment.from_file(audio_file_path)
+        if audio_file_path!="":
+            start_ms = int(row['start'] * 1000)
+            end_ms = int(row['stop'] * 1000)
             segment = audio[start_ms:end_ms]
             audio_segments.append(segment)
     return audio_segments
