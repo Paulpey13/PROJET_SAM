@@ -1,8 +1,12 @@
 import torch
 from torch.utils.data import DataLoader, Dataset
+<<<<<<< HEAD
 
 # Function to create sequences from the text series
 def create_sequences(text_series, window_size=5):
+=======
+def create_sequences_mots(text_series, window_size=5):
+>>>>>>> 4ab7c92818ce313ade6fcf3f68bad1f9b28c005b
     sequences = []
     for i in range(1, window_size + 1):
         # Add the appropriate number of "start" words at the beginning when there is no previous context
@@ -16,7 +20,22 @@ def create_sequences(text_series, window_size=5):
         sequences.append(' '.join(sequence))
     return sequences
 
+<<<<<<< HEAD
 # Dataset class for the text
+=======
+def create_sequences(df):
+    sequences = [] 
+    for i in range( len(df)):
+        sequence = df['text'][i]
+        if isinstance(sequence,float):
+            sequence="unk"
+        else:
+            sequence = [str(word) for word in sequence]
+        sequences.append(' '.join(sequence))
+    return sequences
+
+# Classe de Dataset pour le texte
+>>>>>>> 4ab7c92818ce313ade6fcf3f68bad1f9b28c005b
 class TextDataset(Dataset):
     def __init__(self, texts, labels, tokenizer, max_len):
         self.texts = texts

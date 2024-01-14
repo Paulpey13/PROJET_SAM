@@ -4,6 +4,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+<<<<<<< HEAD
 import torch.nn.utils.rnn as rnn_utils
 from torch.utils.data import Dataset, DataLoader, random_split
 import torchaudio
@@ -11,6 +12,10 @@ from pydub import AudioSegment
 import librosa
 
 # Define the architecture of the audio CNN model
+=======
+
+
+>>>>>>> 4ab7c92818ce313ade6fcf3f68bad1f9b28c005b
 class AudioCNN(nn.Module):
     def __init__(self):
         super(AudioCNN, self).__init__()
@@ -64,8 +69,13 @@ def find_audio_file(dyad, first_speaker, audio_files_path):
             return os.path.join(audio_files_path, file_name)
     return None
 
+<<<<<<< HEAD
 # Function to extract audio segments using the information from the provided dataframe
 def extract_audio_segments(df, audio_files_path):
+=======
+# Cette fonction extrait les segments audio en utilisant les informations du dataframe fournis dans le projet
+def extract_audio_segments_mots(df,audio_files_path):
+>>>>>>> 4ab7c92818ce313ade6fcf3f68bad1f9b28c005b
     audio_segments = []
     audio_file_path = ""
     for index, row in df.iterrows():
@@ -89,7 +99,38 @@ def extract_audio_segments(df, audio_files_path):
             audio_segments.append(segment)
     return audio_segments
 
+<<<<<<< HEAD
 # Function to extract MFCC features from an audio segment
+=======
+def extract_audio_segments(df,audio_files_path):
+    audio_segments = []
+    audio_file_path = ""
+    nombre_boucle=0
+    for index, row in df.iterrows():
+        nombre_boucle+=1
+        first_speaker=str(row['speaker'])
+        if isinstance(row['speaker'], float):
+            first_speaker="NA"
+            
+            
+        if first_speaker not in audio_file_path:
+            # Si le fichier audio n'est pas chargé, on le charge
+            audio = None
+            gc.collect()
+            audio_file_path = find_audio_file(row['dyad'],first_speaker,audio_files_path)
+            if audio_file_path is None:
+                print("Audio file not found for dyad {}".format(row['dyad']))
+                audio_file_path = ""
+                continue
+            audio = AudioSegment.from_file(audio_file_path)
+        if audio_file_path!="":
+            start_ms = int(row['start'] * 1000)
+            end_ms = int(row['stop'] * 1000)
+            segment = audio[start_ms:end_ms]
+            audio_segments.append(segment)
+    return audio_segments
+
+>>>>>>> 4ab7c92818ce313ade6fcf3f68bad1f9b28c005b
 def extract_features(audio_segment):
     # Convert the audio segment to a numpy array
     samples = np.array(audio_segment.get_array_of_samples())
