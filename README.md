@@ -50,6 +50,7 @@ To run a notebook, navigate to the project directory in your terminal and start 
 
 ```bash
 jupyter notebook
+```
 
 ## License
 
