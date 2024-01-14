@@ -1,11 +1,14 @@
 import torch
 from torch.utils.data import DataLoader, Dataset
+
+# Function to create sequences from the dataframe
 def create_sequences(df, window_size=5):
     sequences = []
                 
     for i in range(len(df)):
+        # Check if the stop_words and stop_ipu are the same
         if int(df['stop_words'][i])==int(df['stop_ipu'][i]):
-            # Prendre window_size mots précédents et le mot courant pour former la séquence
+            # Take the current word and the previous window_size words to form the sequence
             sequence = df["text_ipu"][i]
             if isinstance(sequence, str):
                 sequence = [str(word) for word in sequence]
@@ -13,7 +16,8 @@ def create_sequences(df, window_size=5):
             else:
                 sequences.append("unk")
     return sequences
-# Classe de Dataset pour le texte
+
+# Dataset class for the text
 class TextDataset(Dataset):
     def __init__(self, texts, labels, tokenizer, max_len):
         self.texts = texts
@@ -28,6 +32,7 @@ class TextDataset(Dataset):
         text = str(self.texts[item])
         label = self.labels[item]
 
+        # Encode the text using the provided tokenizer
         encoding = self.tokenizer.encode_plus(
             text,
             add_special_tokens=True,
