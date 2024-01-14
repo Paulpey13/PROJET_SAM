@@ -30,7 +30,6 @@ def load_all_ipus(folder_path:str='transcr', load_words:bool=False):
         df = pd.read_csv(file, na_values=['']) # one speaker name is 'NA'
         df['dyad'] = file.split('/')[-1].split('_')[0]
         data.append(df)
-<<<<<<< HEAD
 
     # A remettre si besoin
     # data = pd.concat(data, axis=0).reset_index(drop=True).drop(columns=['?'])
@@ -40,15 +39,6 @@ def load_all_ipus(folder_path:str='transcr', load_words:bool=False):
     # plabels = [col for col in data.columns if not any([col.startswith(c) for c in ['dyad', 'ipu_id','speaker','start','stop','text', 'duration']])]
     # print(data[plabels].sum(axis=0) / data.shape[0])
 
-=======
-            
-    #a remettre si besoin
-    data = pd.concat(data, axis=0).reset_index(drop=True)
-    #print(data.shape)
-    plabels = [col for col in data.columns if not any([col.startswith(c) 
-            for c in ['dyad', 'ipu_id','speaker','start','stop','text', 'duration']])]
-    #print(data[plabels].sum(axis=0) / data.shape[0])
->>>>>>> 4ab7c92818ce313ade6fcf3f68bad1f9b28c005b
     return data
 
 # Function to filter out the initial common conversations

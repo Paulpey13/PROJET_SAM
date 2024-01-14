@@ -4,7 +4,6 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-<<<<<<< HEAD
 import torch.nn.utils.rnn as rnn_utils
 from torch.utils.data import Dataset, DataLoader, random_split
 import torchaudio
@@ -12,10 +11,6 @@ from pydub import AudioSegment
 import librosa
 
 # Define the architecture of the audio CNN model
-=======
-
-
->>>>>>> 4ab7c92818ce313ade6fcf3f68bad1f9b28c005b
 class AudioCNN(nn.Module):
     def __init__(self):
         super(AudioCNN, self).__init__()
@@ -69,13 +64,8 @@ def find_audio_file(dyad, first_speaker, audio_files_path):
             return os.path.join(audio_files_path, file_name)
     return None
 
-<<<<<<< HEAD
 # Function to extract audio segments using the information from the provided dataframe
 def extract_audio_segments(df, audio_files_path):
-=======
-# Cette fonction extrait les segments audio en utilisant les informations du dataframe fournis dans le projet
-def extract_audio_segments_mots(df,audio_files_path):
->>>>>>> 4ab7c92818ce313ade6fcf3f68bad1f9b28c005b
     audio_segments = []
     audio_file_path = ""
     for index, row in df.iterrows():
@@ -99,9 +89,7 @@ def extract_audio_segments_mots(df,audio_files_path):
             audio_segments.append(segment)
     return audio_segments
 
-<<<<<<< HEAD
 # Function to extract MFCC features from an audio segment
-=======
 def extract_audio_segments(df,audio_files_path):
     audio_segments = []
     audio_file_path = ""
@@ -130,7 +118,6 @@ def extract_audio_segments(df,audio_files_path):
             audio_segments.append(segment)
     return audio_segments
 
->>>>>>> 4ab7c92818ce313ade6fcf3f68bad1f9b28c005b
 def extract_features(audio_segment):
     # Convert the audio segment to a numpy array
     samples = np.array(audio_segment.get_array_of_samples())
