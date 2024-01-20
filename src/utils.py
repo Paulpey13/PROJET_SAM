@@ -96,42 +96,29 @@ def calculate_f1_and_confusion_matrix_text(model, data_loader, device):
 
     return f1, conf_matrix
 
-def predition_model_audio(model,dataset,device,proba=True):
+
+def calculate_f1_and_confusion_matrix_audio_text(model, data_loader, device):
+    model.eval()
     all_preds = []
     all_labels = []
     with torch.no_grad():
-        for inputs, labels in dataset:
-            inputs, labels = inputs.to(device), labels.to(device)
+        for audio_inputs, text_inputs_dict, labels in data_loader:
+            audio_inputs = audio_inputs.to(device)
+            input_ids = text_inputs_dict['input_ids'].to(device)
+            attention_mask = text_inputs_dict['attention_mask'].to(device)
+            labels = labels.to(device)
 
-            preds = model(inputs)
-            if not proba:
-                _, preds = torch.max(preds.data, dim=1)
+            # Directly use the output of the model as logits
+            outputs = model(audio_inputs, input_ids, attention_mask)
+            _, preds = torch.max(outputs, dim=1)
+
             all_preds.append(preds.cpu().numpy())
             all_labels.append(labels.cpu().numpy())
 
     all_preds = np.concatenate(all_preds, axis=0)
     all_labels = np.concatenate(all_labels, axis=0)
-    return all_preds,all_labels
 
+    f1 = f1_score(all_labels, all_preds, average='weighted')
+    conf_matrix = confusion_matrix(all_labels, all_preds)
 
-
-def prediction_model_text(model,test_loader,device,proba=True):
-    all_preds_text = []
-    all_labels = []
-    with torch.no_grad():
-        for d in test_loader:
-            input_ids = d["input_ids"].to(device)
-            attention_mask = d["attention_mask"].to(device)
-            labels = d["labels"].to(device)
-
-            outputs = model(input_ids=input_ids, attention_mask=attention_mask)
-            preds = outputs.logits
-            if not proba:
-                _, preds = torch.max(preds, dim=1)
-
-            all_preds_text.append(preds.cpu().numpy())
-            all_labels.append(labels.cpu().numpy())
-
-    all_preds_text = np.concatenate(all_preds_text, axis=0)
-    all_labels = np.concatenate(all_labels, axis=0)
-    return all_preds_text,all_labels
+    return f1, conf_matrix
