@@ -5,7 +5,7 @@ import os
 import numpy as np
 from utils import calculate_f1_and_confusion_matrix_text
 import copy
-def training_loop_text(num_epochs,optimizer,model,loss_fn, scheduler, train_loader,val_loader, device,model_name,task,patience):
+def training_loop_text(num_epochs,optimizer,model,loss_fn, scheduler, train_loader,val_loader, device,model_name,task,patience,save=True):
     model.train()
     losses = []
     correct_predictions = 0
@@ -54,11 +54,12 @@ def training_loop_text(num_epochs,optimizer,model,loss_fn, scheduler, train_load
             break
         print(f'validation  f1 score : {f1}')
         
+    if save:
+        if os.path.isdir(f'../modele/text_model/{task}')==False:
+            os.mkdir(f'../modele/text_model/{task}')
         
-    if os.path.isdir(f'../modele/text_model/{task}')==False:
-        os.mkdir(f'../modele/text_model/{task}')
-        
-    torch.save(best_model, f'../modele/text_model/{task}/{model_name}')
+        torch.save(best_model, f'../modele/text_model/{task}/{model_name}')
+    return best_model
 
 
 

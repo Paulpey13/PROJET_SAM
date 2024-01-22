@@ -55,13 +55,13 @@ def load_data_audio(seed,task="yield"):
     test_dataset = AudioDataset(X_test, y_test)
 
     # Create data loaders.
-    train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
-    val_loader = DataLoader(val_dataset, batch_size=32, shuffle=False)
-    test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
+    train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True)
+    val_loader = DataLoader(val_dataset, batch_size=16, shuffle=False)
+    test_loader = DataLoader(test_dataset, batch_size=16, shuffle=False)
     return train_loader,val_loader,test_loader
 
 
-def training_eval_model(num_epochs,seed,device,model_name,train_loader,val_loader,test_loader,patience,class_weight=[1.0,5.0],task="yield",save=True):
+def training_model_audio(num_epochs,seed,model_name,train_loader,val_loader,patience,class_weight=[1.0,5.0],task="yield",save=True):
     # task = yield or turn_after
     #entraînement
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -70,8 +70,6 @@ def training_eval_model(num_epochs,seed,device,model_name,train_loader,val_loade
     model = AudioCNN().to(device)
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-
-
     class_weights = torch.tensor(class_weight, device=device)
 
     loss_fn = nn.CrossEntropyLoss(weight=class_weights)
@@ -79,10 +77,15 @@ def training_eval_model(num_epochs,seed,device,model_name,train_loader,val_loade
     #training
     model=training_loop_audio(num_epochs, optimizer, model, loss_fn, train_loader,val_loader,device,model_name=model_name,task=task,patience=patience)
     
-    
+    return model
+        
+        
+def evaluate_model_audio(model,model_name,task,test_loader,model_save=True):
     #evaluation
-    model=torch.load(f'../modele/audio_model/{task}/{model_name}')
-    
+    if model_save:
+        model=torch.load(f'../modele/audio_model/{task}/{model_name}')
+        
+    device=torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     all_preds_audio,all_labels=predition_model_audio(model,test_loader,device,proba=False)
     f1 = f1_score(all_labels, all_preds_audio)#, average='weighted')
     conf_matrix = confusion_matrix(all_labels, all_preds_audio)
@@ -97,12 +100,13 @@ def training_eval_model(num_epochs,seed,device,model_name,train_loader,val_loade
     print(f'Nombre d\'éléments de classe 0 détectés : {detected_class_0} sur {total_class_0}')
     print(f'Nombre d\'éléments de classe 1 détectés : {detected_class_1} sur {total_class_1}')
         
-        
-
+    
 #fonction qui fera varier les hyperparamètres
 
-def training_eval_models(num_epochs,seed,device,model_name,patience,class_weight=[[1.0,5.0]],task="yield",save=True):
+def training_eval_model_audio(num_epochs,seed,model_name,patience,class_weight=[1.0,5.0],task="yield",save=True):
     
     train_loader,val_loader,test_loader=load_data_audio(seed,task=task) 
     
-    training_eval_model(num_epochs,seed,device,model_name,train_loader,val_loader,test_loader,patience=patience,class_weight=class_weight[0],task=task,save=save)
+    model=training_model_audio(num_epochs,seed,model_name,train_loader,val_loader,patience=patience,class_weight=class_weight,task=task,save=save)
+
+    evaluate_model_audio(model,task,model_name,test_loader,model_save=False)

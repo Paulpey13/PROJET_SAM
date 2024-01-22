@@ -88,14 +88,7 @@ def load_data_audio_text(seed,task="yield"):
     test_loader = DataLoader(test_dataset, batch_size=16, shuffle=False)
     return train_loader,test_loader
 
-
-
-def training_eval_models(num_epochs,seed,device,model_name,patience,class_weight=[[1.0,5.0]],task="yield",save=True):
-    train_loader,test_loader=load_data_audio_text(seed,task=task)
-    training_eval_model(num_epochs,seed,device,model_name,train_loader,test_loader,patience,class_weight=class_weight[0],task=task,save=save)
-    
-    
-def training_eval_model(num_epochs,seed,device,model_name,train_loader,test_loader,patience,class_weight=[1.0,5.0],task="yield",save=True):
+def training_model_audio_text(num_epochs,seed,model_name,train_loader,test_loader,patience,class_weight=[1.0,5.0],task="yield",save=True):
     # task = yield or turn_after
     #entraînement
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -108,12 +101,6 @@ def training_eval_model(num_epochs,seed,device,model_name,train_loader,test_load
 
     # Optimiseur et taux d'apprentissage
     optimizer = AdamW(model.parameters(), lr=2e-5)
-    total_steps = len(train_loader) * num_epochs
-    scheduler = get_linear_schedule_with_warmup(
-        optimizer,
-        num_warmup_steps=0,
-        num_training_steps=total_steps
-)
     class_weights = torch.tensor(class_weight, device=device) # adaptation des poids des classes
     loss_fn = nn.CrossEntropyLoss(weight=class_weights)
     model = LateFusionModel().to(device)
@@ -127,10 +114,13 @@ def training_eval_model(num_epochs,seed,device,model_name,train_loader,test_load
 
     # Number of training epochs
     training_loop_audio_text(num_epochs, optimizer, model, loss_fn, train_loader,test_loader,device,model_name=model_name,task=task,patience=patience)
-    
+    return model
 
+def evaluate_model_audio(model,model_name,task,test_loader,model_save=True):
     #evaluation
-    model=torch.load(f'../modele/audio_text_model/{task}/{model_name}')
+    if model_save:
+        model=torch.load(f'../modele/audio_text_model/{task}/{model_name}')
+    device=torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     f1,conf_matrix=calculate_f1_and_confusion_matrix_audio_text(model, test_loader, device)
     print(f'Test F1 Score: {f1}')
     print(f'Confusion Matrix:\n{conf_matrix}')
@@ -142,3 +132,11 @@ def training_eval_model(num_epochs,seed,device,model_name,train_loader,test_load
 
     print(f'Nombre d\'éléments de classe 0 détectés : {detected_class_0} sur {total_class_0}')
     print(f'Nombre d\'éléments de classe 1 détectés : {detected_class_1} sur {total_class_1}')
+    
+    
+
+def training_eval_model_audio_text(num_epochs,seed,model_name,patience,class_weight=[1.0,5.0],task="yield",save=True):
+    train_loader,test_loader=load_data_audio_text(seed,task=task)
+    model=training_model_audio_text(num_epochs,seed,model_name,train_loader,test_loader,patience,class_weight=class_weight,task=task,save=save)
+    evaluate_model_audio(model,task,model_name,test_loader,model_save=False)
+    
