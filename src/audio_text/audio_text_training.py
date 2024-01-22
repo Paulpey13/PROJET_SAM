@@ -58,6 +58,9 @@ def training_loop_audio_text(num_epochs, optimizer, model, loss_fn, train_loader
             if patience_counter == 0:
                 print("Early stopping triggered")
                 break
-        if os.path.isdir(f'../modele/audio_text_model/{task}')==False:
-            os.makedirs(f'../modele/audio_text_model/{task}')
-        torch.save(model, f'../modele/audio_text_modelg/{task}/{model_name}')
+        if save:
+            if os.path.isdir(f'../modele/audio_text_model/{task}')==False:
+                os.makedirs(f'../modele/audio_text_model/{task}')
+            torch.save(model, f'../modele/audio_text_model/{task}/{model_name}')
+        return model
+        
