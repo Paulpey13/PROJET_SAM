@@ -1,4 +1,6 @@
-
+import os
+import sys
+sys.path.insert(0, '../src')
 import torch
 import torch.nn as nn
 import os

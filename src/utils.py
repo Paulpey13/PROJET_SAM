@@ -65,7 +65,7 @@ def calculate_f1_and_confusion_matrix_audio(model, data_loader, device):
     all_preds = np.concatenate(all_preds, axis=0)
     all_labels = np.concatenate(all_labels, axis=0)
 
-    f1 = f1_score(all_labels, all_preds, average='weighted')
+    f1 = f1_score(all_labels, all_preds)
     conf_matrix = confusion_matrix(all_labels, all_preds)
 
     return f1, conf_matrix
@@ -91,7 +91,7 @@ def calculate_f1_and_confusion_matrix_text(model, data_loader, device):
     all_preds = np.concatenate(all_preds, axis=0)
     all_labels = np.concatenate(all_labels, axis=0)
 
-    f1 = f1_score(all_labels, all_preds, average='weighted')
+    f1 = f1_score(all_labels, all_preds)
     conf_matrix = confusion_matrix(all_labels, all_preds)
 
     return f1, conf_matrix
@@ -118,7 +118,7 @@ def calculate_f1_and_confusion_matrix_audio_text(model, data_loader, device):
     all_preds = np.concatenate(all_preds, axis=0)
     all_labels = np.concatenate(all_labels, axis=0)
 
-    f1 = f1_score(all_labels, all_preds, average='weighted')
+    f1 = f1_score(all_labels, all_preds)
     conf_matrix = confusion_matrix(all_labels, all_preds)
 
     return f1, conf_matrix

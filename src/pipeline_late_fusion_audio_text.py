@@ -26,6 +26,8 @@ import torch
 from transformers import AdamW, get_linear_schedule_with_warmup
 from transformers import CamembertModel,CamembertTokenizer, CamembertForSequenceClassification
 from text.text_extract import create_sequences
+
+
 def load_data_audio_text(seed,task="yield"):
     # load data pd 
     transcr_path='../paco-cheese/transcr'
