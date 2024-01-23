@@ -115,4 +115,8 @@ def training_late_combinaison(num_epochs, optimizer, model_audio, model_text, co
         print(f'Epoch {epoch+1}/{num_epochs}, Validation Loss: {avg_val_loss:.4f}')
         """
 
+    if save:
+        if os.path.isdir(f'../modele/audio_text_late_model/{task}')==False:
+            os.makedirs(f'../modele/audio_text_late_model/{task}')
+        torch.save(combine_model, f'../modele/audio_text_late_model/{task}/{model_name}')
     return combine_model

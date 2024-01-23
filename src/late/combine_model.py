@@ -5,7 +5,6 @@ import torch.nn.functional as F
 class Combine_prediction(nn.Module):
     def __init__(self):
         super(Combine_prediction, self).__init__()
-        # Définir les couches ici
         self.fc1 = nn.Linear(4, 2)  # 4 caractéristiques en entrée, 2 en sortie
         
 
