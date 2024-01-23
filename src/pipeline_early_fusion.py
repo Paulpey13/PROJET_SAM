@@ -114,8 +114,8 @@ def evaluate_model_audio_text_early(model,test_loader):
 
 
 
-def training_evaluate_model_audio_text_early(num_epochs,seed,model_name,patience,class_weight=[1.0,5.0],task="yield",save=True,all_training=False):
+def training_evaluate_model_audio_text_early(num_epochs,seed,model_name,patience,class_weight=[1.0,5.0],task="yield",save=True):
     train_loader,val_loader,test_loader=load_data_audio_text_early(seed,task)
-    model=training_model_audio_text_early(num_epochs,seed,model_name,train_loader,val_loader,patience,class_weight=class_weight,task="yield",save=True)
+    model=training_model_audio_text_early(num_epochs,seed,model_name,train_loader,val_loader,patience,class_weight=class_weight,task="yield",save=save)
     evaluate_model_audio_text_early(model,test_loader)
     
