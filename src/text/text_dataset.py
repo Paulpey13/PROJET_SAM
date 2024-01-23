@@ -1,5 +1,6 @@
 from torch.utils.data import DataLoader, Dataset
 import torch
+
 # Classe de Dataset pour le texte
 class TextDataset(Dataset):
     def __init__(self, texts, labels, tokenizer, max_len):
@@ -15,6 +16,7 @@ class TextDataset(Dataset):
         text = str(self.texts[item])
         label = self.labels[item]
 
+        # Encodage du texte en utilisant le tokenizer
         encoding = self.tokenizer.encode_plus(
             text,
             add_special_tokens=True,
@@ -27,8 +29,8 @@ class TextDataset(Dataset):
         )
 
         return {
-            'text': text,
-            'input_ids': encoding['input_ids'].flatten(),
-            'attention_mask': encoding['attention_mask'].flatten(),
-            'labels': torch.tensor(label, dtype=torch.long)
+            'text': text,  # Texte brut
+            'input_ids': encoding['input_ids'].flatten(),  # Identifiants d'entrée
+            'attention_mask': encoding['attention_mask'].flatten(),  # Masque d'attention
+            'labels': torch.tensor(label, dtype=torch.long)  # labels sous forme de tenseur torch
         }

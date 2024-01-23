@@ -1,52 +1,56 @@
 import torch
 import numpy as np
 from sklearn.metrics import f1_score, confusion_matrix
+
+# Crée une liste de labels en fonction du changement de locuteur
 def create_y(df):
-    y = [0] 
+    y = [0]  # Initialisation avec 0
     for i in range(0, len(df)-1):
-        # Check if the current speaker is different from the previous one
+        # Vérifie si le locuteur actuel est différent du précédent
         if df['speaker'][i] != df['speaker'][i+1]:
-            y.append(1)  # Speaker changed
+            y.append(1)  # Changement de locuteur
         else:
-            y.append(0)  # Speaker did not change
+            y.append(0)  # Pas de changement de locuteur
     return y
 
+# Crée une liste de label en fonction de la colonne 'yield_at_end'
 def create_y_yield_at(df):
     y = [] 
     for i in range(len(df)):
-        # Check if the current speaker is different from the previous one
-        if df['yield_at_end'][i]==True:
-            y.append(1)  # Speaker changed
+        # Vérifie si 'yield_at_end' est True
+        if df['yield_at_end'][i] == True:
+            y.append(1)  # Changement de locuteur
         else:
-            y.append(0)  # Speaker did not change
+            y.append(0)  # Pas de changement de locuteur
     return y
 
-
+# Crée une liste de label en fonction de la colonne 'turn_after'
 def create_y_turn_after(df):
     y = [] 
     for i in range(len(df)):
-        # Check if the current speaker is different from the previous one
-        if df['turn_after'][i]==True:
-            y.append(1)  # Speaker changed
+        # Vérifie si 'turn_after' est True
+        if df['turn_after'][i] == True:
+            y.append(1)  # Changement de locuteur
         else:
-            y.append(0)  # Speaker did not change
-    return y
-    
-def create_y_time(df,window_time):
-    y = [0] 
-    for i in range(0, len(df)-1):
-        # Check if the current speaker is different from the previous one
-        j=i+1
-        stop=False
-        while j<len(df)and df['start_words'][j] < df['stop_words'][i]+window_time and not stop:
-            if df['speaker'][i] != df['speaker'][j]:
-                y.append(1)  # Speaker changed
-                stop = True
-            j+=1
-        if stop==False:
-            y.append(0) # Speaker did not change in time windows
+            y.append(0)  # Pas de changement de locuteur
     return y
 
+# Crée une liste de label en fonction d'une fenêtre temporelle
+def create_y_time(df, window_time):
+    y = [0] 
+    for i in range(0, len(df)-1):
+        j = i + 1
+        stop = False
+        while j < len(df) and df['start_words'][j] < df['stop_words'][i] + window_time and not stop:
+            if df['speaker'][i] != df['speaker'][j]:
+                y.append(1)  # Changement de locuteur
+                stop = True
+            j += 1
+        if not stop:
+            y.append(0)  # Pas de changement de locuteur dans la fenêtre de temps
+    return y
+
+# Calcule le score F1 et la matrice de confusion pour un modèle audio
 def calculate_f1_and_confusion_matrix_audio(model, data_loader, device):
     model.eval()
     all_preds = []
@@ -70,6 +74,7 @@ def calculate_f1_and_confusion_matrix_audio(model, data_loader, device):
 
     return f1, conf_matrix
 
+# Calcule le score F1 et la matrice de confusion pour le modèle de texte
 def calculate_f1_and_confusion_matrix_text(model, data_loader, device):
     model.eval()
     all_preds = []
@@ -96,7 +101,7 @@ def calculate_f1_and_confusion_matrix_text(model, data_loader, device):
 
     return f1, conf_matrix
 
-
+# Calcule le score F1 et la matrice de confusion pour le modèle audio-texte
 def calculate_f1_and_confusion_matrix_audio_text(model, data_loader, device):
     model.eval()
     all_preds = []
@@ -108,7 +113,7 @@ def calculate_f1_and_confusion_matrix_audio_text(model, data_loader, device):
             attention_mask = text_inputs_dict['attention_mask'].to(device)
             labels = labels.to(device)
 
-            # Directly use the output of the model as logits
+            # Utilise directement la sortie du modèle comme logits
             outputs = model(audio_inputs, input_ids, attention_mask)
             _, preds = torch.max(outputs, dim=1)
 
