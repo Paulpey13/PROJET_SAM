@@ -3,7 +3,6 @@ import sys
 sys.path.insert(0, '../src')  
 from utils import create_y_yield_at, create_y_turn_after, create_y  
 print(os.getcwd())
-
 from torch.utils.data import Dataset, DataLoader, random_split
 import torchaudio
 import torch
@@ -16,7 +15,7 @@ from audio.audio_dataset import AudioDataset, collate_fn
 from audio.audio_model import AudioCNN
 from audio.audio_training import training_loop_audio, prediction_model_audio
 
-from sklearn.metrics import f1_score, confusion_matrix
+from sklearn.metrics import f1_score, confusion_matrix, cohen_kappa_score
 import numpy as np
 import torch
 import torch.nn as nn
@@ -34,6 +33,7 @@ def load_data_audio(seed, task="yield"):
     if task == "yield":
         y = create_y_yield_at(data)
     elif task == "turn_after":
+        print("tache turn_after" )
         y = create_y_turn_after(data)
     else:
         y = create_y_yield_at(data)
@@ -47,7 +47,7 @@ def load_data_audio(seed, task="yield"):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=seed)
     
     # Split des données d'entraînement en ensembles d'entraînement et de validation
-    X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.1, random_state=seed)
+    X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.01, random_state=seed)
 
     train_dataset = AudioDataset(X_train, y_train)
     val_dataset = AudioDataset(X_val, y_val)
@@ -74,7 +74,7 @@ def training_model_audio(num_epochs, seed, model_name, train_loader, val_loader,
     model = training_loop_audio(num_epochs, optimizer, model, loss_fn, train_loader, val_loader, device, model_name=model_name, task=task, patience=patience)
     
     return model
-
+    
 # Fonction pour évaluer le  modèle audio
 def evaluate_model_audio(model, model_name, task, test_loader, model_save=True):
     # Évaluation du modèle
@@ -83,9 +83,17 @@ def evaluate_model_audio(model, model_name, task, test_loader, model_save=True):
         
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     all_preds_audio, all_labels = prediction_model_audio(model, test_loader, device, proba=False)
+    
+    # Calcul du score F1
     f1 = f1_score(all_labels, all_preds_audio)
-    conf_matrix = confusion_matrix(all_labels, all_preds_audio)
     print(f'Score F1 de test : {f1}')
+
+    # Calcul du Kappa de Cohen
+    kappa = cohen_kappa_score(all_labels, all_preds_audio)
+    print(f'Score Kappa de Cohen : {kappa}')
+
+    # Calcul et affichage de la matrice de confusion
+    conf_matrix = confusion_matrix(all_labels, all_preds_audio)
     print(f'Matrice de confusion :\n{conf_matrix}')
 
     total_class_0 = np.sum(conf_matrix[0])
@@ -95,6 +103,7 @@ def evaluate_model_audio(model, model_name, task, test_loader, model_save=True):
 
     print(f'Nombre d\'éléments de classe 0 détectés : {detected_class_0} sur {total_class_0}')
     print(f'Nombre d\'éléments de classe 1 détectés : {detected_class_1} sur {total_class_1}')
+    return f1, conf_matrix,kappa
 
 # Fonction pour entraîner et évaluer le modèle audio en faisant varier les hyperparamètres
 def training_eval_model_audio(num_epochs, seed, model_name, patience, class_weight=[1.0, 5.0], task="yield", save=True):
@@ -102,5 +111,6 @@ def training_eval_model_audio(num_epochs, seed, model_name, patience, class_weig
     train_loader, val_loader, test_loader = load_data_audio(seed, task=task) 
     
     model = training_model_audio(num_epochs, seed, model_name, train_loader, val_loader, patience=patience, class_weight=class_weight, task=task, save=save)
-
-    evaluate_model_audio(model, task, model_name, test_loader, model_save=False)
+    f1_train, conf_matrix_train,kappa_train = evaluate_model_audio(model, model_name, task, train_loader, model_save=False)
+    f1_test, conf_matrix_test,kappa_test = evaluate_model_audio(model, model_name, task, test_loader, model_save=False)
+    return f1_train, conf_matrix_train,kappa_train, f1_test, conf_matrix_test,kappa_test

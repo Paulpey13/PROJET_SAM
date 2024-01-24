@@ -18,7 +18,14 @@ class AudioDataset(Dataset):
         return len(self.data)
     
     def __getitem__(self, idx):
-        """
+        audio_tensor = torch.from_numpy(self.data[idx]).float()
+        audio_tensor = audio_tensor.unsqueeze(0)  # Ajout dimension de canal
+
+        label = self.labels[idx]
+        return audio_tensor, label
+    """
+    def __getitem__(self, idx):
+       
         Récupère un échantillon audio et son étiquette en utilisant un index.
         
         Paramètres:
@@ -26,7 +33,7 @@ class AudioDataset(Dataset):
         
         Retourne:
             tuple: Contient l'échantillon audio sous forme de tensor PyTorch et son étiquette.
-        """
+        
         # Convertit l'échantillon audio de numpy array à PyTorch tensor et ajoute des dimensions supplémentaires nécessaires pour le modèle.
         audio_tensor = torch.from_numpy(self.data[idx]).float()
         audio_tensor = audio_tensor.unsqueeze(0).unsqueeze(0)
@@ -34,7 +41,7 @@ class AudioDataset(Dataset):
         # Récupère l'étiquette correspondante.
         label = self.labels[idx]
         return audio_tensor, label
-    
+    """
 
 def collate_fn(batch):
     """

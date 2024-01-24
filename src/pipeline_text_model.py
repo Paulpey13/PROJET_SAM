@@ -6,11 +6,10 @@ from torch.utils.data import Dataset, DataLoader, random_split
 import torch
 import torch.nn.utils.rnn as rnn_utils
 from load_data import load_all_ipus
-from utils import create_y_yield_at, create_y_turn_after, create_y
 from text.text_dataset import *
 from text.text_extract import *
 from text.text_training import *
-from sklearn.metrics import f1_score, confusion_matrix
+from sklearn.metrics import f1_score, confusion_matrix,cohen_kappa_score
 import numpy as np
 import torch
 import torch.nn as nn
@@ -103,7 +102,7 @@ def evaluate_model_text(model, model_name, task, test_loader, model_save=True):
     
     
     all_preds_audio, all_labels = prediction_model_text(model, test_loader, device, proba=False)
-    
+    kappa=cohen_kappa_score(all_labels, all_preds_audio)
     # Calcul du score F1 et de la matrice de confusion
     f1 = f1_score(all_labels, all_preds_audio)
     conf_matrix = confusion_matrix(all_labels, all_preds_audio)
@@ -118,9 +117,11 @@ def evaluate_model_text(model, model_name, task, test_loader, model_save=True):
 
     print(f'Nombre d\'éléments de classe 0 détectés : {detected_class_0} sur {total_class_0}')
     print(f'Nombre d\'éléments de classe 1 détectés : {detected_class_1} sur {total_class_1}')
-
+    return f1, conf_matrix,kappa
 # Fonction pour entraîner et évaluer le modèle textuel
 def training_eval_model_text(num_epochs, seed, model_name, patience, class_weight=[1.0,5.0], task="yield", save=True):
     train_loader, val_loader, test_loader = load_data_text(seed, task=task)
     model = training_model_text(num_epochs, seed, model_name, train_loader, val_loader, patience, class_weight=class_weight, task=task, save=save)
-    evaluate_model_text(model, task, model_name, test_loader, model_save=False)
+    f1_train, conf_matrix_train,kappa_train = evaluate_model_text(model, model_name, task, train_loader, model_save=False)
+    f1_test, conf_matrix_test,kappa_test= evaluate_model_text(model, model_name, task, test_loader, model_save=False)
+    return f1_train, conf_matrix_train,kappa_train, f1_test, conf_matrix_test,kappa_test

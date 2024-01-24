@@ -9,7 +9,8 @@ from src.utils import *
 from early.early_model import *
 from early.early_dataset import *
 from early.early_training import *
-
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import f1_score, confusion_matrix, cohen_kappa_score
 # Fonction pour charger les données audio et textuelles
 def load_data_audio_text_early(seed, task="yield"):
     # Chargement des données textuelles depuis un dossier spécifié
@@ -85,7 +86,11 @@ def training_model_audio_text_early(num_epochs, seed, model_name, train_loader, 
 
 # Fonction pour l'évaluation du modèle
 def evaluate_model_audio_text_early(model, test_loader):
-    f1, conf_matrix = prediction_audio_text_early(model, test_loader)
+    all_preds,all_labels = prediction_audio_text_early(model, test_loader)
+    f1 = f1_score(all_labels, all_preds)
+    conf_matrix = confusion_matrix(all_labels, all_preds)
+    kappa=cohen_kappa_score(all_labels, all_preds)
+    
     print(f'Test F1 Score: {f1}')
     print(f'Matrice de confusion:\n{conf_matrix}')
 
@@ -96,9 +101,12 @@ def evaluate_model_audio_text_early(model, test_loader):
 
     print(f'Nombre d\'éléments de classe 0 détectés : {detected_class_0} sur {total_class_0}')
     print(f'Nombre d\'éléments de classe 1 détectés : {detected_class_1} sur {total_class_1}')
-
+    return f1, conf_matrix,kappa
 # Fonction pour entraîner et évaluer le modèle
 def training_evaluate_model_audio_text_early(num_epochs, seed, model_name, patience, class_weight=[1.0, 5.0], task="yield", save=True):
     train_loader, val_loader, test_loader = load_data_audio_text_early(seed, task)
     model = training_model_audio_text_early(num_epochs, seed, model_name, train_loader, val_loader, patience, class_weight=class_weight, task=task, save=save)
-    evaluate_model_audio_text_early(model, test_loader)
+    
+    f1_train, conf_matrix_train,kappa_train = evaluate_model_audio_text_early(model, train_loader)
+    f1_test, conf_matrix_test,kappa_test = evaluate_model_audio_text_early(model, test_loader)
+    return f1_train, conf_matrix_train, kappa_train, f1_test, conf_matrix_test,kappa_test

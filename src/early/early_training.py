@@ -54,6 +54,4 @@ def prediction_audio_text_early(model, test_loader):
             all_labels.append(labels.cpu().numpy())
     all_preds = np.concatenate(all_preds, axis=0)
     all_labels = np.concatenate(all_labels, axis=0)
-    f1 = f1_score(all_labels, all_preds)
-    conf_matrix = confusion_matrix(all_labels, all_preds)
-    return f1, conf_matrix
+    return all_preds, all_labels
