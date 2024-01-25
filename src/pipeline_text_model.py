@@ -1,11 +1,11 @@
 import os
 import sys
 sys.path.insert(0, '../src')
-from utils import create_y_yield_at, create_y_turn_after, create_y
 from torch.utils.data import Dataset, DataLoader, random_split
 import torch
+
 import torch.nn.utils.rnn as rnn_utils
-from load_data import load_all_ipus
+from load_data import *
 from text.text_dataset import *
 from text.text_extract import *
 from text.text_training import *
@@ -40,7 +40,7 @@ def load_data_text(seed, task="yield"):
     
     # Split des données en ensembles d'entraînement, de validation et de test
     X_train, X_test, y_train, y_test = train_test_split(data_text, y, test_size=0.2, random_state=seed)
-    X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.1, random_state=seed)
+    X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.001, random_state=seed)
     
     # Paramètres pour le modèle CamemBERT
     model_name = 'camembert-base'

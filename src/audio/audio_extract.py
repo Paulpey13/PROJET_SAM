@@ -147,7 +147,7 @@ def extract_features(audio_segment):
         samples = samples.astype(np.float32) / 2147483648
 
     # Extraire les MFCCs en utilisant librosa
-    mfccs = librosa.feature.mfcc(y=samples, sr=audio_segment.frame_rate, n_mfcc=13)
+    mfccs = librosa.feature.mfcc(y=samples, sr=audio_segment.frame_rate, n_mfcc=128)
     
     # Calculer la moyenne des MFCCs pour chaque coefficient
     mfccs_mean = np.mean(mfccs, axis=1)

@@ -7,6 +7,7 @@ from pipeline_text_model import *
 from late.late_audio_text_training import *
 from late.combine_model import *
 from sklearn.metrics import f1_score, confusion_matrix, cohen_kappa_score
+from load_data import *
 # Fonction pour charger les données audio et texte 
 def load_data_audio_text_late(seed, task="yield"):
     # Chargement des données audio

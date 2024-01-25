@@ -5,7 +5,7 @@ import torch
 import torch.nn as nn
 import os
 import numpy as np
-from utils import calculate_f1_and_confusion_matrix_text  # Importation d'une fonction utilitaire
+from sklearn.metrics import f1_score, confusion_matrix
 import copy
 
 # Fonction pour l'entraînement du modèle texte
@@ -15,6 +15,7 @@ def training_loop_text(num_epochs, optimizer, model, loss_fn, scheduler, train_l
     correct_predictions = 0
     patience_init = patience
     best_f1 = 0
+    best_model=model
     for epoch in range(num_epochs):
         print(f'Epoch {epoch}')
         model.train()
@@ -80,3 +81,32 @@ def prediction_model_text(model, test_loader, device, proba=True):
     all_preds_text = np.concatenate(all_preds_text, axis=0)
     all_labels = np.concatenate(all_labels, axis=0)
     return all_preds_text, all_labels
+
+
+
+# Calcule le score F1 et la matrice de confusion pour le modèle de texte
+def calculate_f1_and_confusion_matrix_text(model, data_loader, device):
+    model.eval()
+    all_preds = []
+    all_labels = []
+
+    with torch.no_grad():
+        for d in data_loader:
+            input_ids = d["input_ids"].to(device)
+            attention_mask = d["attention_mask"].to(device)
+            labels = d["labels"].to(device)
+
+            outputs = model(input_ids=input_ids, attention_mask=attention_mask)
+            logits = outputs.logits
+            _, preds = torch.max(logits, dim=1)
+
+            all_preds.append(preds.cpu().numpy())
+            all_labels.append(labels.cpu().numpy())
+
+    all_preds = np.concatenate(all_preds, axis=0)
+    all_labels = np.concatenate(all_labels, axis=0)
+
+    f1 = f1_score(all_labels, all_preds)
+    conf_matrix = confusion_matrix(all_labels, all_preds)
+
+    return f1, conf_matrix
