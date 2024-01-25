@@ -17,11 +17,9 @@ This project is part of the SAM (Signal and Multimedia Learning) course in the M
 
 ## Project Overview
 
-This project aims to apply the concepts learned in the SAM (Signal and Multimedia Learning) course. It involves the multimodal analysis and modeling of a dataset using various machine learning techniques. 
+This project aims to apply the concepts learned in the SAM (Signal and Multimedia Learning) course. It involves the creation multimodal models such as early fusion and late fusion using videos, audio and text data. 
 
-Multimodality in this context refers to the use of multiple types of data (such as text, audio, and video) in our analysis. By leveraging the strengths of each data type, we aim to build more robust and accurate models.
-
-The project is implemented in Python, using libraries such as pandas, numpy, scikit-learn, and matplotlib for data manipulation, analysis, and visualization. We also use libraries like PyTorch for building and training our machine learning models.
+The goal is to compare the different ways to process multimodality (mainly Early VS Late fusion) and to familiarize ourselves with audio, text, and videos processing in deep learning models.
 
 ## Getting Started
 
@@ -51,7 +49,7 @@ The project is structured into two main directories: `notebooks` and `src`. Each
 
 ### Notebooks Directory
 
-The `notebooks` directory contains Jupyter notebooks, each designed for a specific part of the project:
+The `notebooks` directory contains Jupyter notebooks, each designed for a specific model of the project:
 
 1. `audioOnly.ipynb`: Implementation of the audio model.
 2. `Early_fusion_video.ipynb`: Implementation of Early fusion with video (work in progress).
@@ -103,10 +101,14 @@ Additional scripts in the `src` directory include:
 
 To work with these scripts, navigate to the `src` directory and execute the desired scripts with Python.
 
+## Contributors
+
+- Victor Tancrez
+- Paul Peyssard
+- Tony Nogneng
+- Supervised by Eliot Maes & Leonor Beccera
+- Aix-Marseille University
+
 ## License
 
 This project is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License
-
-## Acknowledgments
-
-We would like to thank the professors and teaching assistants of the SAM course for their guidance and support throughout this project.
