@@ -25,9 +25,13 @@ The goal is to compare the different ways to process multimodality (mainly Early
 
 ### Prerequisites
 
-- Python 3.8 or higher
-- pip (Python package installer)
-- Jupyter Notebook
+- numpy==1.23.5
+- pandas==1.5.2
+- scikit-learn==1.2.0
+- matplotlib==3.6.2
+- torch==1.13.1
+- torchaudio==0.13.1+cu116
+- keras==2.11.0
 
 ### Installation
 
