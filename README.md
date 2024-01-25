@@ -2,6 +2,16 @@
 
 This project is part of the SAM (Signal and Multimedia Learning) course in the Master 2 IAAA (Artificial Intelligence & Automatic Learning) at Aix-Marseille University.
 
+
+## Table of Contents
+- [Project Overview](#project-overview)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+- [Usage](#usage)
+- [License](#license)
+- [Acknowledgments](#acknowledgments)
+
 ## Project Overview
 
 This project aims to apply the concepts learned in the SAM (Signal and Multimedia Learning) course. It involves the multimodal analysis and modeling of a dataset using various machine learning techniques. 
