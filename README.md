@@ -71,11 +71,6 @@ The `src` directory contains various subdirectories, each dedicated to a specifi
   - `audio_model.py`: Contains the audio model.
   - `audio_training.py`: Script for training the audio model.
 
-- **Audio Text Directory**:
-  - `audio_text_dataset.py`: Manages the dataset combining audio and text data.
-  - `audio_text_model.py`: Contains the model for audio-text analysis.
-  - `audio_text_training.py`: Script for training the audio-text model.
-
 - **Early Directory**:
   - `early_dataset.py`: Manages the dataset for early fusion techniques.
   - `early_model.py`: Contains the early fusion model.
