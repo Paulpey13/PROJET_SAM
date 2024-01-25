@@ -9,8 +9,11 @@ This project is part of the SAM (Signal and Multimedia Learning) course in the M
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
 - [Usage](#usage)
+  - [Notebooks Directory](#notebooks-directory)
+  - [Src Directory](#src-directory)
 - [License](#license)
 - [Acknowledgments](#acknowledgments)
+
 
 ## Project Overview
 
@@ -44,23 +47,66 @@ pip install -r requirements.txt
 
 ## Usage
 
-This project contains several Jupyter Notebook (`*.ipynb`) files, each of which serves a different purpose:
+The project is structured into two main directories: `notebooks` and `src`. Each directory serves a specific purpose with various files facilitating the project's implementation.
 
-1. `timeOnly.ipynb`: This notebook focuses on the analysis and modeling of time-based features in the dataset.
+### Notebooks Directory
 
-2. `textOnly.ipynb`: This notebook is dedicated to the analysis and modeling of text-based features, based on natural language processing techniques.
+The `notebooks` directory contains Jupyter notebooks, each designed for a specific part of the project:
 
-3. `audioOnly.ipynb`: This notebook deals with audio-based features, based on signal processing and audio analysis techniques.
+1. `audioOnly.ipynb`: Implementation of the audio model.
+2. `Early_fusion_video.ipynb`: Implementation of Early fusion with video (work in progress).
+3. `Early_fusion.ipynb`: Implementation of Early fusion with text and audio.
+4. `late_fusion.ipynb`: Implementation of late fusion with text and audio.
+5. `textOnly.ipynb`: Implementation of the text model.
+6. `timOnly.ipynb`: Implementation of the text model based on time pauses.
+7. `Video_only.ipynb`: Implementation of the video model.
 
-4. `late_fusion.ipynb`: This notebook demonstrates a late fusion approach, where predictions from multiple models (possibly trained on different types of features) are combined.
+### Src directory
 
-5. `Early_fusion2.ipynb`: This notebook demonstrates an early fusion approach, where different types of features are combined before training a model.
+The `src` directory contains various subdirectories, each dedicated to a specific component of the project:
 
-To run a notebook, navigate to the project directory in your terminal and start Jupyter Notebook with the following command:
+- **Audio Directory**:
+  - `audio_dataset.py`: Handles the audio dataset.
+  - `audio_extract.py`: Script for audio data extraction.
+  - `audio_model.py`: Contains the audio model.
+  - `audio_training.py`: Script for training the audio model.
 
-```bash
-jupyter notebook
-```
+- **Audio Text Directory**:
+  - `audio_text_dataset.py`: Manages the dataset combining audio and text data.
+  - `audio_text_model.py`: Contains the model for audio-text analysis.
+  - `audio_text_training.py`: Script for training the audio-text model.
+
+- **Early Directory**:
+  - `early_dataset.py`: Manages the dataset for early fusion techniques.
+  - `early_model.py`: Contains the early fusion model.
+  - `early_training.py`: Script for training the early fusion model.
+
+- **Late Directory**:
+  - `combine_model.py`: Script to combine models for late fusion.
+  - `late_audio_text_training.py`: Script for training the late fusion model with audio and text data.
+
+- **Text Directory**:
+  - `text_dataset.py`: Handles the text dataset.
+  - `text_extract.py`: Script for text data extraction.
+  - `text_model.py`: Contains the text model.
+  - `text_training.py`: Script for training the text model.
+
+- **Video Directory**:
+  - `video_extract.py`: Script for video data extraction.
+  - `video_model.py`: Contains the video model.
+  - `video_training.py`: Script for training the video model.
+
+Additional scripts in the `src` directory include:
+
+- `load_data.py`: Script for loading datasets.
+- `pipeline_audio_model.py`: Pipeline for processing and training the audio model.
+- `pipeline_early_fusion.py`: Pipeline for processing and training the early fusion model.
+- `pipeline_late_fusion_audio_text.py`: Pipeline for processing and training the late fusion model with audio and text.
+- `pipeline_late_fusion.py`: Pipeline for processing and training the late fusion model.
+- `pipeline_text_model.py`: Pipeline for processing and training the text model.
+- `utils.py`: Contains utility functions used across various scripts.
+
+To work with these scripts, navigate to the `src` directory and execute the desired scripts with Python.
 
 ## License
 
