@@ -45,7 +45,7 @@ def load_data_text(seed, task="yield"):
     # Paramètres pour le modèle CamemBERT
     model_name = 'camembert-base'
     max_length = 256
-    batch_size = 16
+    batch_size = 32
     
     # Tokenizer pour CamemBERT
     tokenizer = CamembertTokenizer.from_pretrained(model_name)
@@ -122,6 +122,8 @@ def evaluate_model_text(model, model_name, task, test_loader, model_save=True):
 def training_eval_model_text(num_epochs, seed, model_name, patience, class_weight=[1.0,5.0], task="yield", save=True):
     train_loader, val_loader, test_loader = load_data_text(seed, task=task)
     model = training_model_text(num_epochs, seed, model_name, train_loader, val_loader, patience, class_weight=class_weight, task=task, save=save)
+    print("train")
     f1_train, conf_matrix_train,kappa_train = evaluate_model_text(model, model_name, task, train_loader, model_save=False)
+    print("test")
     f1_test, conf_matrix_test,kappa_test= evaluate_model_text(model, model_name, task, test_loader, model_save=False)
     return f1_train, conf_matrix_train,kappa_train, f1_test, conf_matrix_test,kappa_test

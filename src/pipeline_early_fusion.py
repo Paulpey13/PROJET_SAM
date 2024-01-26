@@ -105,7 +105,8 @@ def evaluate_model_audio_text_early(model, test_loader):
 def training_evaluate_model_audio_text_early(num_epochs, seed, model_name, patience, class_weight=[1.0, 5.0], task="yield", save=True):
     train_loader, val_loader, test_loader = load_data_audio_text_early(seed, task)
     model = training_model_audio_text_early(num_epochs, seed, model_name, train_loader, val_loader, patience, class_weight=class_weight, task=task, save=save)
-    
+    print("train")
     f1_train, conf_matrix_train,kappa_train = evaluate_model_audio_text_early(model, train_loader)
+    print("test")
     f1_test, conf_matrix_test,kappa_test = evaluate_model_audio_text_early(model, test_loader)
     return f1_train, conf_matrix_train, kappa_train, f1_test, conf_matrix_test,kappa_test

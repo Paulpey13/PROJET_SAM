@@ -3,6 +3,8 @@ import gc
 from pydub import AudioSegment
 import numpy as np
 import librosa
+import warnings
+warnings.filterwarnings('ignore', category=UserWarning, module='librosa')
 
 def find_audio_file(dyad, first_speaker, audio_files_path):
     """

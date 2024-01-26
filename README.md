@@ -49,20 +49,25 @@ pip install -r requirements.txt
 
 ## Usage
 
-The project is structured into two main directories: `notebooks` and `src`. Each directory serves a specific purpose with various files facilitating the project's implementation.
+The project is structured into two main directories: `notebooks` and `src`. Each directory serves a specific purpose with various files facilitating the project's implementation. You need to import paco-cheese folder in order to use this project.
+Also you can look at our experience results according to model and seed.
 
 ### Notebooks Directory
 
-The `notebooks` directory contains Jupyter notebooks, each designed for a specific model of the project:
+The `notebooks` directory contains Jupyter notebooks, each designed to use a specific model of the project:
 
-1. `audioOnly.ipynb`: Implementation of the audio model.
-2. `Early_fusion_video.ipynb`: Implementation of Early fusion with video (work in progress).
-3. `Early_fusion.ipynb`: Implementation of Early fusion with text and audio.
-4. `late_fusion.ipynb`: Implementation of late fusion with text and audio.
-5. `textOnly.ipynb`: Implementation of the text model.
-6. `timOnly.ipynb`: Implementation of the text model based on time pauses.
-7. `Video_only.ipynb`: Implementation of the video model.
 
+Those notebook run a pipeline for every models : 
+
+1. `audio_model.ipynb`: Implementation of the audio model.
+2. `Early_fusion_model.ipynb`: Implementation of Early fusion with text and audio.
+3. `late_fusion_model.ipynb`: Implementation of late fusion with text and audio.
+4. `text_model.ipynb`: Implementation of the text model.
+
+This notebook implement video mode : 
+5. `video_model.ipynb`: Implementation of the video model.
+
+6. `experiences.ipynb`: this run all of experiences.
 ### Src directory
 
 The `src` directory contains various subdirectories, each dedicated to a specific component of the project:
@@ -98,10 +103,8 @@ Additional scripts in the `src` directory include:
 - `load_data.py`: Script for loading datasets.
 - `pipeline_audio_model.py`: Pipeline for processing and training the audio model.
 - `pipeline_early_fusion.py`: Pipeline for processing and training the early fusion model.
-- `pipeline_late_fusion_audio_text.py`: Pipeline for processing and training the late fusion model with audio and text.
 - `pipeline_late_fusion.py`: Pipeline for processing and training the late fusion model.
 - `pipeline_text_model.py`: Pipeline for processing and training the text model.
-- `utils.py`: Contains utility functions used across various scripts.
 
 To work with these scripts, navigate to the `src` directory and execute the desired scripts with Python.
 

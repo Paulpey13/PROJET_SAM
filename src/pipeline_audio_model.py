@@ -109,6 +109,8 @@ def training_eval_model_audio(num_epochs, seed, model_name, patience, class_weig
     train_loader, val_loader, test_loader = load_data_audio(seed, task=task) 
     
     model = training_model_audio(num_epochs, seed, model_name, train_loader, val_loader, patience=patience, class_weight=class_weight, task=task, save=save)
+    print("train")
     f1_train, conf_matrix_train,kappa_train = evaluate_model_audio(model, model_name, task, train_loader, model_save=False)
+    print("test")
     f1_test, conf_matrix_test,kappa_test = evaluate_model_audio(model, model_name, task, test_loader, model_save=False)
     return f1_train, conf_matrix_train,kappa_train, f1_test, conf_matrix_test,kappa_test

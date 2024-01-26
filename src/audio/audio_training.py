@@ -39,7 +39,7 @@ def training_loop_audio(num_epochs, optimizer, model, loss_fn, train_loader, val
             print("Arrêt anticipé (Early stopping)")
             break
             
-        print(f'Époque [{epoch+1}/{num_epochs}], f1 sur validation: {f1}')
+        #print(f'Époque [{epoch+1}/{num_epochs}], f1 sur validation: {f1}')
         
     if save:
         if not os.path.isdir(f'../modele/audio_model/{task}'):

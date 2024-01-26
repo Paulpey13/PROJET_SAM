@@ -23,7 +23,6 @@ class AudioCNN(nn.Module):
         self.fc2 = nn.Linear(32, 2)
 
     def forward(self, x):
-        print(x.shape)
         # Différentes couches de convolutions avec des fonctions d'activation ReLU
         x = F.relu(self.conv1(x))
         x = F.relu(self.conv2(x))

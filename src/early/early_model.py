@@ -37,6 +37,7 @@ class EarlyFusionModel(nn.Module):
         text_outputs = self.camembert(input_ids=text_input_ids, attention_mask=text_attention_mask)
         text_x = text_outputs[0][:, 0, :]  # Prendre le token CLS
         # Fusion des caractéristiques audio et textuelles
+        
         combined = torch.cat((audio_x, text_x), dim=1)
 
         # Passage dans la couche entièrement connectée
