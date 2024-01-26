@@ -22,8 +22,8 @@ def load_data_audio_text_late(seed, task="yield"):
 def training_audio_text_late_model(num_epochs, seed, model_name, train_loader_audio, val_loader_audio, test_loader_audio, train_loader_text, val_loader_text, test_loader_text, patience, class_weight=[1.0,5.0], task="turn_after", save=True, all_training=True,modele_addition=False):
     if all_training:
         # Entraînement des modèles audio et textuels
-        model_text = training_model_text(num_epochs, seed, model_name, train_loader_text, val_loader_text, patience, class_weight=class_weight, task=task, save=save)
-        model_audio = training_model_audio(num_epochs, seed, model_name, train_loader_audio, val_loader_audio, patience=patience, class_weight=class_weight, task=task, save=save)
+        model_text = training_model_text(1, seed, model_name, train_loader_text, val_loader_text, patience, class_weight=[1.0,3.6], task=task, save=save)
+        model_audio = training_model_audio(5, seed, model_name, train_loader_audio, val_loader_audio, patience=patience, class_weight=[1.0,4.0], task=task, save=save)
     else:
         # Si les modèles ne sont pas déjà entraînés, ils sont entraînés ici
         if os.path.isfile(f'../modele/text_model/{task}/{model_name}') == False:
@@ -47,7 +47,7 @@ def training_audio_text_late_model(num_epochs, seed, model_name, train_loader_au
     
     if modele_addition==False:
         # Entraînement de la combinaison des modèles
-        combine_model = training_late_combinaison(num_epochs, optimizer, model_audio, model_text, combine_model, loss_fn, train_loader_audio, train_loader_text, val_loader_audio, val_loader_text, device, model_name, task, patience, save=True,modele_addition=modele_addition)
+        combine_model = training_late_combinaison(num_epochs, optimizer, model_audio, model_text, combine_model, loss_fn, train_loader_audio, train_loader_text, val_loader_audio, val_loader_text, device, model_name, task, patience, save=True)
     
     return combine_model, model_audio, model_text
 
@@ -73,6 +73,6 @@ def evaluate_model_audio_text_late(combine_model, model_audio, model_text, test_
 def training_evaluate_model_audio_text_late(num_epochs, seed, model_name, patience, class_weight=[1.0,5.0], task="yield", save=True, all_training=False,modele_addition=False):
     train_loader_audio, val_loader_audio, test_loader_audio, train_loader_text, val_loader_text, test_loader_text = load_data_audio_text_late(seed, task)
     combine_model, model_audio, model_text = training_audio_text_late_model(num_epochs, seed, model_name, train_loader_audio, val_loader_audio, test_loader_audio, train_loader_text, val_loader_text, test_loader_text, patience, class_weight=class_weight, task=task, save=save, all_training=all_training,modele_addition=modele_addition)
-    f1_train, conf_matrix_train,kappa_train = evaluate_model_audio_text_late(combine_model, model_audio, model_text, train_loader_audio, train_loader_text)
+    f1_train, conf_matrix_train,kappa_train = evaluate_model_audio_text_late(combine_model, model_audio, model_text, train_loader_audio, train_loader_text,modele_addition)
     f1_test, conf_matrix_test,kappa_test = evaluate_model_audio_text_late(combine_model, model_audio, model_text, test_loader_audio, test_loader_text,modele_addition)
     return f1_train, conf_matrix_train,kappa_train, f1_test, conf_matrix_test,kappa_test

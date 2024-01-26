@@ -33,6 +33,7 @@ def prediction_late_combinaison(combine_model, model_audio, model_text, test_loa
             audio_pred = model_audio(audio_inputs)
             text_pred = model_text(input_ids, attention_mask).logits
             if modele_addition:
+                print("addition")
                 _,preds=torch.max(audio_pred+text_pred,dim=1)
             else :
                 # Prédictions à partir du modèle combiné

@@ -45,7 +45,7 @@ def load_data_audio(seed, task="yield"):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=seed)
     
     # Split des données d'entraînement en ensembles d'entraînement et de validation
-    X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.01, random_state=seed)
+    X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.001, random_state=seed)
 
     train_dataset = AudioDataset(X_train, y_train)
     val_dataset = AudioDataset(X_val, y_val)

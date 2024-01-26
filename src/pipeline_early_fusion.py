@@ -37,7 +37,7 @@ def load_data_audio_text_early(seed, task="yield"):
         audio_features, text_features, y, test_size=0.2, random_state=seed
     )
     X_audio_train, X_audio_val, X_text_features_train, X_text_features_val, y_train, y_val = train_test_split(
-        X_audio_train, X_text_features_train, y_train, test_size=0.01, random_state=seed
+        X_audio_train, X_text_features_train, y_train, test_size=0.001, random_state=seed
     )
 
     train_dataset = audio_text_Dataset(

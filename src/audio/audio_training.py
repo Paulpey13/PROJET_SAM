@@ -11,7 +11,7 @@ from sklearn.metrics import f1_score, confusion_matrix
 def training_loop_audio(num_epochs, optimizer, model, loss_fn, train_loader, val_loader, device, model_name, task, patience, save=True):
     best_f1 = 0
     patience_init = patience
-    
+    best_model = None
     for epoch in range(num_epochs):
         model.train()
         
@@ -44,6 +44,8 @@ def training_loop_audio(num_epochs, optimizer, model, loss_fn, train_loader, val
     if save:
         if not os.path.isdir(f'../modele/audio_model/{task}'):
             os.mkdir(f'../modele/audio_model/{task}')
+        if best_model is None:
+            best_model = model
         torch.save(best_model, f'../modele/audio_model/{task}/{model_name}')
     
     return best_model
